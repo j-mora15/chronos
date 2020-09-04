@@ -72,7 +72,7 @@ export default {
   justify-content: space-between
   padding: 10px
   background: black
-  user_select: none
+  user-select: none
 
 .date
   display: flex
