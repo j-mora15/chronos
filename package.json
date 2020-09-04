@@ -9,7 +9,7 @@
     "estart": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "start": "vue-cli-service serve"
+    "start": "vue-cli-service lint --fix && vue-cli-service serve"
   },
   "main": "background.js",
   "dependencies": {
@@ -41,27 +41,17 @@
     "env": {
       "node": true
     },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
+    "extends": ["plugin:vue/essential", "@vue/standard"],
     "parserOptions": {
       "ecmaVersion": 2020
     },
     "rules": {}
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
+  "browserslist": ["> 1%", "last 2 versions", "not dead"],
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
+    "*.{js,jsx,vue}": ["vue-cli-service lint", "git add"]
   }
 }

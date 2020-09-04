@@ -1,24 +1,41 @@
-# chronos
+# Chronos
 
-## Project setup
+A desk clock made with Javascript and Electron
+
+## First
+
+Clone the project
+
 ```
-npm install
+git clone https://github.com/j-mora15/chronos.git
 ```
 
-### Compiles and hot-reloads for development
+## Dependencies Installation
+
 ```
-npm run serve
+npm i
 ```
 
-### Compiles and minifies for production
+### Start Hot-Server for development
+
+```
+npm run start
+```
+
+### Compiles for Web
+
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Compiles for Desktop (Electron)
+
 ```
-npm run lint
+npm run ebuild
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Lints and fixes files
+
+```
+npm run lint --fix
+```
