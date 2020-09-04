@@ -1,16 +1,22 @@
 <template>
   <div>
     <Clock />
+    <Splash />
   </div>
 </template>
 
 <script>
 import Clock from './components/Clock/clock.vue'
+import Splash from './components/Splash/splash.vue'
+import 'animate.css'
 
 export default {
   name: 'App',
 
-  components: { Clock }
+  components: {
+    Clock,
+    Splash
+  }
 }
 </script>
 
@@ -27,4 +33,5 @@ export default {
 body
   padding: 0px
   margin: 0px
+  background: black
 </style>
