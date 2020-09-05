@@ -1,6 +1,10 @@
 <template>
   <div class="container animate__animated" v-if="splashState">
-    <img :src="require('@/assets/images/chronos.png')" alt="Chronos" class="logo animate__animated animate__jackInTheBox animate__faster"/>
+    <img
+      :src="require('@/assets/images/chronos.png')"
+      alt="Chronos"
+      class="logo animate__animated animate__jackInTheBox animate__faster"
+    />
   </div>
 </template>
 
@@ -12,9 +16,8 @@ export default {
     const el = this.$el
 
     setTimeout(() => {
-      console.log(el.children[0])
-      el.classList.remove('animate__jackInTheBox')
-      el.classList.add('animate__jello')
+      el.children[0].classList.remove('animate__jackInTheBox')
+      el.children[0].classList.add('animate__jello')
     }, 1000)
 
     setTimeout(() => {
