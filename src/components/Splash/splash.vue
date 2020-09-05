@@ -14,16 +14,16 @@ export default {
     setTimeout(() => {
       console.log(el.children[0])
       el.classList.remove('animate__jackInTheBox')
-      el.classList.add('animate__shakeX')
-    }, 2000)
+      el.classList.add('animate__jello')
+    }, 1000)
 
     setTimeout(() => {
       el.classList.add('animate__fadeOut')
-    }, 3000)
+    }, 2000)
 
     setTimeout(() => {
       this.$store.dispatch('toggleSplash')
-    }, 5000)
+    }, 3000)
   },
 
   computed: {
