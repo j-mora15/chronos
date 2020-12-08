@@ -1,37 +1,27 @@
 <template>
-  <div>
-    <Clock />
-    <Splash />
-  </div>
+  <Clock />
+  <CtrlPanel />
 </template>
 
 <script>
-import Clock from './components/Clock/clock.vue'
-import Splash from './components/Splash/splash.vue'
+import { reactive, defineAsyncComponent as lazy } from 'vue'
+import '@fortawesome/fontawesome-free/css/all.css'
 import 'animate.css'
 
 export default {
   name: 'App',
 
   components: {
-    Clock,
-    Splash
+    CtrlPanel: lazy(() => import('./components/CtrlPanel/ctrl-panel.vue')),
+    Clock: lazy(() => import('./components/Clock/clock.vue'))
   }
 }
 </script>
 
-<style lang="sass">
-@font-face
-  font-family: 'font'
-  src: url('./assets/fonts/Lato.ttf')
-
-*
-  font-family: 'font'
-  box-sizing: border-box
-  transition: all ease .3s
-
-body
-  padding: 0px
-  margin: 0px
-  background: black
+<style>
+#app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 </style>
