@@ -1,14 +1,8 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-import store from './store'
-import Chronos from './ChronosCore/ChronosCore.js'
+import store from './store/store.js'
+import './index.css'
 
-Vue.config.productionTip = false
-Vue.prototype.$chronos = new Chronos()
-
-new Vue({
-  store,
-  render: function (h) {
-    return h(App)
-  }
-}).$mount('#app')
+const app = createApp(App)
+app.use(store)
+app.mount('#app')

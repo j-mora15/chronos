@@ -1,136 +1,166 @@
 <template>
-  <div class="clock">
-    <div class="date">
-      <div>{{ day || 'Chronos' }}</div>
-      <div>{{ numberDay || '-' }}</div>
-      <div>{{ month || 'Desktop' }}</div>
-      <div>{{ year || 2019 }}</div>
-    </div>
+  <section class="root">
+    <div class="cont time" :class="{ small: panel, big: !panel }">
+      <div class="clock">
+        <div>{{ time.hour }}</div>
+        <span>:</span>
+        <div>{{ time.minute }}</div>
+        <div class="indicator">
+          {{ time.meridiem === 'Ante Meridiem' ? 'am' : 'pm' }}
+        </div>
+      </div>
 
-    <div class="hours">
-      <div>{{ hour || '12' }}</div>
-      <div>{{ min || '00' }}</div>
-      <div>{{ sec || '00' }}</div>
+      <div v-if="geo.info !== null" class="info">
+        <div>
+          {{ `In ${geo.info.city}, ${geo.info.country_code}` }}
+        </div>
+        <div>
+          <button class="infoBtn" @click="changePanelStatus">
+            <span>{{ panel ? 'LESS' : 'MORE' }}</span>
+            <div class="iconCont">
+              <span v-if="panel === true" class="icon fas fa-chevron-down">
+              </span>
+              <span v-if="panel === false" class="icon fas fa-chevron-up">
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
-
-    <div class="meridiem">
-      <div>{{ meridiem }}</div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script>
+import { reactive, computed } from 'vue'
+import { useStore } from 'vuex'
+import { geoip } from '../../services/geolocation-api/geoip.js'
+
 export default {
   name: 'Clock',
 
-  data: () => ({
-    // Date Area
-    day: undefined,
-    numberDay: undefined,
-    month: undefined,
-    year: undefined,
+  setup() {
+    const store = useStore()
+    const chronos = store.getters.getChronos
 
-    // Hours Area
-    hour: undefined,
-    min: undefined,
-    sec: undefined,
+    const time = reactive({
+      day: chronos.day(),
+      numberDay: chronos.numberDay(),
+      month: chronos.month(),
+      year: chronos.year(),
+      hour: chronos.hour(),
+      minute: chronos.min(),
+      second: chronos.sec(),
+      meridiem: chronos.meridiem()
+    })
 
-    // Meridiem Area
-    meridiem: 'Ante Meridiem'
-  }),
+    const update = () => {
+      time.day = chronos.day()
+      time.numberDay = chronos.numberDay()
+      time.month = chronos.month()
+      time.year = chronos.year()
+      time.hour = chronos.hour()
+      time.minute = chronos.min()
+      time.second = chronos.sec()
+      time.meridiem = chronos.meridiem()
+    }
 
-  mounted () {
     setInterval(() => {
-      this.gear()
+      update()
     }, 1000)
-  },
 
-  methods: {
-    gear () {
-      // Date Area
-      this.day = this.$chronos.day()
-      this.numberDay = this.$chronos.numberDay()
-      this.month = this.$chronos.month()
-      this.year = this.$chronos.year()
+    let geo = reactive({
+      info: null
+    })
 
-      // Hours Areas
-      this.hour = this.$chronos.hour()
-      this.min = this.$chronos.min()
-      this.sec = this.$chronos.sec()
-      this.meridiem = this.$chronos.meridiem()
+    const getGeoInfo = async () => {
+      const info = (await geoip()).data
+      geo.info = info
+      store.dispatch('setLocation', info)
+    }
+
+    getGeoInfo()
+
+    return {
+      time,
+      geo,
+      changePanelStatus: () => store.dispatch('changePanelStatus'),
+      panel: computed(() => store.getters.panelStatus)
     }
   }
 }
 </script>
 
-<style lang="sass" scoped>
-.clock
-  display: flex
-  width: 100vw
-  height: 100vh
-  flex-flow: column
-  justify-content: space-between
-  padding: 10px
-  background: black
-  user-select: none
+<style scoped>
+.time {
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
 
-.date
-  display: flex
-  flex-flow: row
-  justify-content: center
-  padding: 10px
-  color: white
-  font-size: 20px
-  border-radius: 10px
-  & > div
-    padding: 5px
+.time.small {
+  height: 50vh;
+}
 
-.hours
-  display: flex
-  justify-content: center
-  & > div
-    display: flex
-    justify-content: center
-    align-items: center
-    background: black
-    color: white
-    width: 200px
-    height: 200px
-    font-size: 80px
-    border-radius: 10px
-    box-shadow: 0px 0px 7px grey
-    &:first-child
-      margin: 0px 20px 0px 0px
-    &:nth-child(2)
-      margin: 0px 20px 0px 0px
+.time.big {
+  height: 100vh;
+}
 
-.meridiem
-  color: white
-  display: flex
-  justify-content: center
-  font-size: 20px
-  padding-top: 10px
+.clock {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  padding: 50px 15px 5px;
+  max-width: 800px;
+  width: 800px;
+  font-weight: 900;
+  font-size: 7rem;
+}
 
-@media screen and (max-width: 640px)
-  .clock
-    justify-content: center
-    align-items: center
+.clock > .indicator {
+  margin-left: 15px;
+  font-weight: 100;
+  font-size: 2rem;
+}
 
-  .date
-    font-size: 15px
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px;
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: uppercase;
+}
 
-  .hours
-    flex-flow: column
-    width: auto
-    & > div
-      width: 130px
-      height: 130px
-      margin: 0px 0px 0px 0px
-      &:first-child
-        margin: 0px 0px 10px 0px
-      &:nth-child(2)
-        margin: 0px 0px 10px 0px
+.infoBtn {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 7px;
+  border-radius: 20px;
+  border: 1px solid black;
+  outline: none;
+}
 
-  .meridiem
-    font-size: 15px
+.iconCont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  border-radius: 50%;
+  padding: 7px;
+  margin-left: 5px;
+}
+
+.icon {
+  color: white;
+}
+
+@media screen and (max-width: 800px) {
+  .clock {
+    width: 100vw;
+    font-size: 25vw;
+  }
+}
 </style>
