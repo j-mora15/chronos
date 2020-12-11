@@ -6,10 +6,13 @@
       animate__slideOutDown: !panel
     }"
   >
-    <div v-if="location !== null" class="grid">
+    <div class="grid">
       <article class="article">
         <p>Country</p>
-        <h2>{{ location.country_name }} / {{ location.city }}</h2>
+        <h2 v-if="location !== null">
+          {{ location.country_name }} / {{ location.city }}
+        </h2>
+        <h2 v-if="location === null">{{ 'Unknown' }}</h2>
       </article>
 
       <article class="article">

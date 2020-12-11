@@ -1,6 +1,16 @@
 <template>
   <section class="root">
     <div class="cont time" :class="{ small: panel, big: !panel }">
+      <div class="decorator">
+        <div>
+          <span :class="`icon fas fa-${decorator.icon}`"> </span>
+          {{ ' ' }}
+          <span>
+            {{ decorator.greet }}
+          </span>
+        </div>
+      </div>
+
       <div class="clock">
         <div>{{ time.hour }}</div>
         <span>:</span>
@@ -10,8 +20,8 @@
         </div>
       </div>
 
-      <div v-if="geo.info !== null" class="info">
-        <div>
+      <div class="info">
+        <div v-if="geo.info !== null">
           {{ `In ${geo.info.city}, ${geo.info.country_code}` }}
         </div>
         <div>
@@ -41,6 +51,10 @@ export default {
   setup() {
     const store = useStore()
     const chronos = store.getters.getChronos
+    const decorator = reactive({
+      greet: 'Good Morning',
+      icon: 'sun'
+    })
 
     const time = reactive({
       day: chronos.day(),
@@ -62,6 +76,40 @@ export default {
       time.minute = chronos.min()
       time.second = chronos.sec()
       time.meridiem = chronos.meridiem()
+
+      if (
+        chronos.hour() >= 1 &&
+        chronos.hour() < 12 &&
+        chronos.meridiem() === 'Ante Meridiem'
+      ) {
+        decorator.greet = 'Good Morning'
+        decorator.icon = 'sun'
+      } else if (
+        chronos.hour() == 12 &&
+        chronos.meridiem() === 'Ante Meridiem'
+      ) {
+        decorator.greet = 'Good Day'
+        decorator.icon = 'sun'
+      } else if (
+        chronos.hour() >= 1 &&
+        chronos.hour() < 7 &&
+        chronos.meridiem() === 'Post Meridiem'
+      ) {
+        decorator.greet = 'Good Afternoon'
+        decorator.icon = 'cloud-sun'
+      } else if (
+        chronos.hour() >= 7 &&
+        chronos.meridiem() === 'Post Meridiem'
+      ) {
+        decorator.greet = 'Good Night'
+        decorator.icon = 'moon'
+      } else if (
+        chronos.hour() == 12 &&
+        chronos.meridiem() === 'Post Meridiem'
+      ) {
+        decorator.greet = 'Good Night'
+        decorator.icon = 'moon'
+      }
     }
 
     setInterval(() => {
@@ -84,7 +132,8 @@ export default {
       time,
       geo,
       changePanelStatus: () => store.dispatch('changePanelStatus'),
-      panel: computed(() => store.getters.panelStatus)
+      panel: computed(() => store.getters.panelStatus),
+      decorator
     }
   }
 }
@@ -110,11 +159,11 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
-  padding: 50px 15px 5px;
+  padding: 5px;
   max-width: 800px;
   width: 800px;
   font-weight: 900;
-  font-size: 7rem;
+  font-size: 6.5rem;
 }
 
 .clock > .indicator {
@@ -155,6 +204,14 @@ export default {
 
 .icon {
   color: white;
+}
+
+.decorator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px;
+  font-size: 15px;
 }
 
 @media screen and (max-width: 800px) {
