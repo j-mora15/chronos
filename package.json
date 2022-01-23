@@ -2,8 +2,9 @@
   "name": "chronos",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "start": "vite",
+    "build": "vite build",
+    "deploy": "vite build && firebase deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
